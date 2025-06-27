@@ -24,7 +24,7 @@ class DocLayNet(torch.utils.data.Dataset):
         for i in range(len(item["bboxes"])):
             annot = {
                 "category_id": item["category_id"][i],
-                "bbox": item["bbox"][i]
+                "bbox": item["bboxes"][i]
             }
             annotations.push(annot)
         target = {'image_id': idx, 'annotations': annotations}
