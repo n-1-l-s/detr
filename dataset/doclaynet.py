@@ -28,7 +28,8 @@ class DocLayNet(torch.utils.data.Dataset):
             }
             annotations.append(annot)
         target = {'image_id': idx, 'annotations': annotations}
-        img = torchvision.transforms.functional.pil_to_tensor(item["image"])
+        #img = torchvision.transforms.functional.pil_to_tensor(item["image"])
+        img = item["image"]
         if self._transforms is not None:
             img, target = self._transforms(img, target)
         return img, target
