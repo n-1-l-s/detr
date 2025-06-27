@@ -23,7 +23,7 @@ from models.transformer import Transformer
 from models.segmentation import DETRsegm, PostProcessPanoptic, PostProcessSegm
 from util.box_ops import box_cxcywh_to_xyxy, box_xyxy_to_cxcywh
 from util.misc import NestedTensor
-from datasets.coco import convert_coco_poly_to_mask
+from dataset.coco import convert_coco_poly_to_mask
 
 __all__ = ["Detr"]
 

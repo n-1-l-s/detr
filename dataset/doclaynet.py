@@ -10,15 +10,16 @@ from pycocotools import mask as coco_mask
 from datasets import load_dataset
 import torchvision.transforms.functional
 
-import datasets.transforms as T
+import dataset.transforms as T
 
 
 class DocLayNet(torch.utils.data.Dataset):
-    def __init__(self, hf_dataset, transforms):
+    def __init__(self, dataset, transforms):
         self._transforms = transforms
+        self.dataset = dataset
 
     def __getitem__(self, idx):
-        item = self.hf_dataset[idx]
+        item = self.dataset[idx]
         annotations = []
         for i in range(len(item["bboxes"])):
             annot = {
