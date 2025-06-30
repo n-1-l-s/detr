@@ -33,6 +33,7 @@ class DocLayNet(torch.utils.data.Dataset):
         #img = torchvision.transforms.functional.pil_to_tensor(item["image"])
         img = item["image"]
         if self._transforms is not None:
+            print(target)
             img, target = self._transforms(img, target)
         return img, target
     
