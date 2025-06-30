@@ -20,19 +20,24 @@ class DocLayNet(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
-        annotations = []
-        for i in range(len(item["bboxes"])):
-            annot = {
-                "category_id": item["category_id"][i],
-                "bbox": item["bboxes"][i]
-            }
-            annotations.append(annot)
-        target = {'image_id': idx, 'annotations': annotations}
+        #annotations = []
+        #for i in range(len(item["bboxes"])):
+        #    annot = {
+        #        "category_id": item["category_id"][i],
+        #        "bbox": item["bboxes"][i]
+        #    }
+        #    annotations.append(annot)
+        #target = {'image_id': idx, 'annotations': annotations}
+        target = {'image_id': idx, 'boxes': item["bboxes"], 'labels': item["category_id"]}
+        
         #img = torchvision.transforms.functional.pil_to_tensor(item["image"])
         img = item["image"]
         if self._transforms is not None:
             img, target = self._transforms(img, target)
         return img, target
+    
+    def __len__(self):
+        pass
 
 
 def make_coco_transforms(image_set):
@@ -46,7 +51,7 @@ def make_coco_transforms(image_set):
 
     if image_set == 'train':
         return T.Compose([
-            T.RandomHorizontalFlip(),
+            #T.RandomHorizontalFlip(),
             T.RandomSelect(
                 T.RandomResize(scales, max_size=1333),
                 T.Compose([
