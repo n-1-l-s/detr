@@ -20,25 +20,36 @@ class DocLayNet(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         item = self.dataset[idx]
-        #annotations = []
-        #for i in range(len(item["bboxes"])):
-        #    annot = {
-        #        "category_id": item["category_id"][i],
-        #        "bbox": item["bboxes"][i]
-        #    }
-        #    annotations.append(annot)
-        #target = {'image_id': idx, 'annotations': annotations}
-        target = {'image_id': idx, 'boxes': item["bboxes"], 'labels': item["category_id"]}
+        image = item["image"]
+
+        w, h = image.size
+
+        classes = torch.tensor(item["category_id"], dtype=torch.int64)
+        boxes = item["bboxes"]
+
+        boxes = torch.as_tensor(boxes, dtype=torch.float32).reshape(-1, 4)
+        boxes[:, 2:] += boxes[:, :2]
+        boxes[:, 0::2].clamp_(min=0, max=w)
+        boxes[:, 1::2].clamp_(min=0, max=h)
+
+        keep = (boxes[:, 3] > boxes[:, 1]) & (boxes[:, 2] > boxes[:, 0])
+        boxes = boxes[keep]
+        classes = classes[keep]
+
+        target = {'image_id': idx, 
+                  'boxes': boxes, 
+                  'labels': classes}
         
-        #img = torchvision.transforms.functional.pil_to_tensor(item["image"])
-        img = item["image"]
+        target["orig_size"] = torch.as_tensor([int(h), int(w)])
+        target["size"] = torch.as_tensor([int(h), int(w)])
+
         if self._transforms is not None:
-            print(target)
-            img, target = self._transforms(img, target)
+            print(type(target["boxes"]))
+            img, target = self._transforms(image, target)
         return img, target
     
     def __len__(self):
-        pass
+        return len(self.dataset)
 
 
 def make_coco_transforms(image_set):
