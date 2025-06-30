@@ -36,7 +36,7 @@ class DocLayNet(torch.utils.data.Dataset):
         boxes = boxes[keep]
         classes = classes[keep]
 
-        target = {'image_id': idx, 
+        target = {'image_id': torch.tensor([idx]), 
                   'boxes': boxes, 
                   'labels': classes}
         
@@ -49,7 +49,6 @@ class DocLayNet(torch.utils.data.Dataset):
         target["size"] = torch.as_tensor([int(h), int(w)])
 
         if self._transforms is not None:
-            print(type(target["boxes"]))
             img, target = self._transforms(image, target)
         return img, target
     
