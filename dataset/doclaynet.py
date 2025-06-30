@@ -40,6 +40,11 @@ class DocLayNet(torch.utils.data.Dataset):
                   'boxes': boxes, 
                   'labels': classes}
         
+        area = torch.tensor(item["area"])
+        iscrowd = torch.tensor([0 for obj in item["category_id"]])
+        target["area"] = area[keep]
+        target["iscrowd"] = iscrowd[keep]
+
         target["orig_size"] = torch.as_tensor([int(h), int(w)])
         target["size"] = torch.as_tensor([int(h), int(w)])
 
