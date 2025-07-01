@@ -17,3 +17,8 @@ ds = build("val", args)
 model, criterion, postprocessors = build_model(args)
 
 print(len(ds))
+
+model.to(args.device)
+model.eval()
+out = model(ds[0][0])
+print(out)
