@@ -53,7 +53,8 @@ class DocLayNet(torch.utils.data.Dataset):
         return img, target
     
     def __len__(self):
-        return len(self.dataset)
+        return 500
+        #return len(self.dataset)
 
 
 def make_coco_transforms(image_set):
